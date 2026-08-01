@@ -152,6 +152,38 @@ A task is complete only if
 
 ---
 
+# Git Workflow
+
+Every completed task should be committed to Git.
+
+Before creating a commit, verify that:
+
+- The task has been fully completed.
+- The project still builds successfully.
+- Existing tests pass (if available).
+- New tests are added when appropriate.
+- Only files related to the current task are included.
+
+Create one commit per completed task.
+
+Commit messages should be short and descriptive.
+
+Examples:
+
+feat: add generic parser
+
+feat: support TopCV configuration
+
+fix: normalize salary values
+
+refactor: simplify parser pipeline
+
+docs: update project plan
+
+After committing successfully, push the current branch to GitHub.
+
+Do not commit unfinished work unless explicitly requested.
+
 # Goal
 
 The objective is not only to finish the project.
