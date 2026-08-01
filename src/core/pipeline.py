@@ -37,7 +37,11 @@ def run_pipeline(
     for config in configs:
         logger.info("Processing config: %s", config.name)
         try:
-            html = fetcher.fetch(str(config.start_url), headers=config.request_headers)
+            if config.browser_actions:
+                actions = [action.model_dump() for action in config.browser_actions]
+                html = fetcher.fetch_with_browser(str(config.start_url), actions=actions)
+            else:
+                html = fetcher.fetch(str(config.start_url), headers=config.request_headers)
         except Exception as error:
             logger.error("Failed to fetch %s: %s", config.name, error)
             continue

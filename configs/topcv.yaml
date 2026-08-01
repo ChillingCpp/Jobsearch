@@ -1,19 +1,19 @@
 name: topcv
 start_url: https://www.topcv.vn/viec-lam
 selectors:
-  job_listing: ".job-info_content"
-  title: ".job-title"
-  company: ".company-name"
+  job_listing: ".feature-job-item"
+  title: "strong.job_title"
+  company: "span.company-name"
   description: ".job-description"
-  url: "a.job-title"
-  salary: ".job-salary"
-  location: ".job-location"
+  url: "a.title"
+  salary: "div.salary span"
+  location: "div.address span"
   posted_date: ".job-date"
 pagination:
   next_selector: ".pagination-next"
   max_pages: 5
 browser_actions:
   - action: wait_for_selector
-    selector: ".job-info_content"
+    selector: ".feature-job-item"
 request_headers:
   User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
