@@ -1,0 +1,20 @@
+# Crawler
+playwright
+requests
+
+# HTML Parsing
+beautifulsoup4
+lxml
+
+# Data Validation
+pydantic
+
+# Database
+psycopg2-binary
+SQLAlchemy
+
+# Configuration
+PyYAML
+
+# Testing
+pytest
