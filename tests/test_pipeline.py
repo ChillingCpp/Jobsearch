@@ -111,3 +111,33 @@ def test_pipeline_handles_no_jobs(session) -> None:
 
     assert stored == 0
     assert repository.find_all() == []
+
+
+INVALID_JOB_HTML = """
+<html>
+<body>
+  <div class="job-listing">
+    <div class="job-title"></div>
+    <div class="job-company"></div>
+  </div>
+</body>
+</html>
+"""
+
+
+def test_pipeline_skips_invalid_jobs(session) -> None:
+    """The pipeline skips jobs with missing required fields."""
+    fetcher = Mock()
+    fetcher.fetch.return_value = INVALID_JOB_HTML
+
+    repository = JobRepository(session)
+    stored = run_pipeline(
+        [make_config()],
+        fetcher,
+        Parser(),
+        Normalizer(),
+        repository,
+    )
+
+    assert stored == 0
+    assert repository.find_all() == []

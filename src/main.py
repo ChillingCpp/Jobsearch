@@ -2,6 +2,12 @@
 
 import argparse
 import logging
+import sys
+from pathlib import Path
+
+# Add project root to sys.path so the 'src' package is importable
+# when running: python src/main.py
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from src.core.config import load_all_configs
 from src.core.pipeline import run_pipeline

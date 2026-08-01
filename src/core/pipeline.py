@@ -2,6 +2,8 @@
 
 import logging
 
+from pydantic import ValidationError
+
 from src.core.config import WebsiteConfig
 from src.crawler.fetcher import Fetcher
 from src.normalizer.normalizer import Normalizer
@@ -44,7 +46,11 @@ def run_pipeline(
         logger.info("Parsed %d raw jobs from %s", len(raw_jobs), config.name)
 
         for raw_job in raw_jobs:
-            job = normalizer.normalize(raw_job, config.name)
+            try:
+                job = normalizer.normalize(raw_job, config.name)
+            except ValidationError as error:
+                logger.warning("Skipping invalid job from %s: %s", config.name, error)
+                continue
             repository.upsert(job)
             total_stored += 1
 
