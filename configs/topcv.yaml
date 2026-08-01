@@ -1,19 +1,20 @@
 name: topcv
-start_url: https://www.topcv.vn/viec-lam
+start_url: https://www.topcv.vn/tim-viec-lam-moi-nhat
 selectors:
-  job_listing: ".feature-job-item"
-  title: "strong.job_title"
-  company: "span.company-name"
+  job_listing: ".job-ta"
+  title: "h3 a"
+  company: ".company-name"
   description: ".job-description"
-  url: "a.title"
-  salary: "div.salary span"
-  location: "div.address span"
+  url: "h3 a"
+  salary: ".salary span"
+  location: ".address span"
   posted_date: ".job-date"
 pagination:
-  next_selector: ".pagination-next"
+  next_selector: ".pagination .btn-next"
   max_pages: 5
+  page_param: "page"
 browser_actions:
   - action: wait_for_selector
-    selector: ".feature-job-item"
+    selector: ".job-ta"
 request_headers:
   User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
