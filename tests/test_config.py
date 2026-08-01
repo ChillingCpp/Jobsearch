@@ -16,8 +16,7 @@ def test_load_valid_config() -> None:
     assert config.pagination is not None
     assert config.pagination.next_selector == ".pagination-next"
     assert config.pagination.max_pages == 5
-    assert len(config.browser_actions) == 1
-    assert config.browser_actions[0].action == "wait_for_selector"
+    assert config.browser_actions == []
     assert config.request_headers["User-Agent"] is not None
 
 

@@ -11,8 +11,5 @@ selectors:
 pagination:
   next_selector: ".pagination-next"
   max_pages: 5
-browser_actions:
-  - action: wait_for_selector
-    selector: ".job-listing"
 request_headers:
   User-Agent: "Mozilla/5.0 (compatible; JobAggregator/1.0)"
