@@ -1,0 +1,18 @@
+name: example_site
+start_url: https://example.com/jobs
+selectors:
+  job_listing: ".job-listing"
+  title: ".job-title"
+  company: ".job-company"
+  location: ".job-location"
+  salary: ".job-salary"
+  description: ".job-description"
+  posted_date: ".job-date"
+pagination:
+  next_selector: ".pagination-next"
+  max_pages: 5
+browser_actions:
+  - action: wait_for_selector
+    selector: ".job-listing"
+request_headers:
+  User-Agent: "Mozilla/5.0 (compatible; JobAggregator/1.0)"
