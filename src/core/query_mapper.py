@@ -2,46 +2,28 @@
 
 from __future__ import annotations
 
-from typing import ClassVar
-
 
 class QueryMapper:
     """Maps a logical job category into one or more search keywords.
 
     The mapper is intentionally simple: it only maps categories to keywords.
     It does not perform any scraping, parsing, or filtering logic.
+
+    Mappings are provided via configuration, not hardcoded.
     """
 
-    _DEFAULT_MAPPINGS: ClassVar[dict[str, list[str]]] = {
-        "it": [
-            "backend",
-            "frontend",
-            "fullstack",
-            "software engineer",
-            "devops",
-        ],
-        "marketing": [
-            "marketing",
-            "digital marketing",
-            "content marketing",
-        ],
-        "sales": [
-            "sales",
-            "kinh doanh",
-            "business development",
-        ],
-    }
-
     def __init__(self, mappings: dict[str, list[str]] | None = None) -> None:
-        """Initialize the mapper with optional custom mappings.
+        """Initialize the mapper with category-to-keywords mappings.
 
         Args:
-            mappings: Optional custom category-to-keywords mappings.
-                These are merged over the default mappings.
+            mappings: Category-to-keywords mappings from configuration.
+                If None, no mappings are known and all categories return
+                themselves as a single keyword.
         """
-        self._mappings = dict(self._DEFAULT_MAPPINGS)
+        self._mappings: dict[str, list[str]] = {}
         if mappings:
-            self._mappings.update(mappings)
+            for category, keywords in mappings.items():
+                self._mappings[category.strip().lower()] = keywords
 
     def map(self, category: str) -> list[str]:
         """Map a logical job category to search keywords.

@@ -81,7 +81,12 @@ def _process_config(
     # Determine the list of URLs to scrape.
     # If a search_url and category are provided, map the category to keywords
     # and build one search URL per keyword.
-    urls = _build_search_urls(config, query_mapper, category)
+    # Use config's category_mappings if available, otherwise fall back to the
+    # global query_mapper.
+    effective_mapper = query_mapper
+    if config.category_mappings:
+        effective_mapper = QueryMapper(config.category_mappings)
+    urls = _build_search_urls(config, effective_mapper, category)
 
     for url in urls:
         stored += _scrape_url(

@@ -144,13 +144,16 @@ def test_pipeline_skips_invalid_jobs(session) -> None:
     assert repository.find_all() == []
 
 
-def test_pipeline_uses_query_mapper_for_search_urls(session) -> None:
-    """The pipeline uses QueryMapper to build search URLs for a category."""
+def test_pipeline_uses_config_category_mappings(session) -> None:
+    """The pipeline uses config's category_mappings to build search URLs."""
     fetcher = Mock()
     fetcher.fetch.return_value = SAMPLE_HTML
 
     config = make_config()
     config.search_url = "https://example.com/search?q={keyword}"
+    config.category_mappings = {
+        "it": ["backend", "frontend", "fullstack", "software engineer", "devops"],
+    }
 
     repository = JobRepository(session)
     stored = run_pipeline(
@@ -159,7 +162,6 @@ def test_pipeline_uses_query_mapper_for_search_urls(session) -> None:
         Parser(),
         Normalizer(),
         repository,
-        query_mapper=QueryMapper(),
         category="it",
     )
 
@@ -173,3 +175,30 @@ def test_pipeline_uses_query_mapper_for_search_urls(session) -> None:
     assert "https://example.com/search?q=fullstack" in urls
     assert "https://example.com/search?q=software%20engineer" in urls
     assert "https://example.com/search?q=devops" in urls
+
+
+def test_pipeline_uses_global_query_mapper_when_no_config_mappings(session) -> None:
+    """The pipeline falls back to global query_mapper when config has no mappings."""
+    fetcher = Mock()
+    fetcher.fetch.return_value = SAMPLE_HTML
+
+    config = make_config()
+    config.search_url = "https://example.com/search?q={keyword}"
+
+    global_mapper = QueryMapper(
+        {"it": ["backend", "frontend"]}
+    )
+
+    repository = JobRepository(session)
+    stored = run_pipeline(
+        [config],
+        fetcher,
+        Parser(),
+        Normalizer(),
+        repository,
+        query_mapper=global_mapper,
+        category="it",
+    )
+
+    assert stored == 2  # 2 keywords from global mapper
+    assert fetcher.fetch.call_count == 2
