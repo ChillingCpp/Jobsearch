@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from src.core.config import load_all_configs
 from src.core.pipeline import run_pipeline
+from src.core.query_mapper import QueryMapper
 from src.crawler.fetcher import Fetcher
 from src.database.models import Base
 from src.database.session import create_engine, create_session
@@ -47,6 +48,11 @@ def build_parser() -> argparse.ArgumentParser:
         default=0,
         help="Run the pipeline repeatedly at the given interval in seconds",
     )
+    parser.add_argument(
+        "--category",
+        default=None,
+        help="Logical job category to search for (e.g. 'it', 'marketing', 'sales')",
+    )
     return parser
 
 
@@ -66,11 +72,20 @@ def main() -> None:
     fetcher = Fetcher()
     parser = Parser()
     normalizer = Normalizer()
+    query_mapper = QueryMapper()
 
     def job() -> None:
         with session_factory() as session:
             repository = JobRepository(session)
-            run_pipeline(configs, fetcher, parser, normalizer, repository)
+            run_pipeline(
+                configs,
+                fetcher,
+                parser,
+                normalizer,
+                repository,
+                query_mapper=query_mapper,
+                category=args.category,
+            )
 
     scheduler = Scheduler(job)
 

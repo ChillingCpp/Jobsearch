@@ -6,6 +6,7 @@ import pytest
 
 from src.core.config import WebsiteConfig
 from src.core.pipeline import run_pipeline
+from src.core.query_mapper import QueryMapper
 from src.database.models import Base
 from src.database.session import create_engine, create_session
 from src.normalizer.normalizer import Normalizer
@@ -141,3 +142,34 @@ def test_pipeline_skips_invalid_jobs(session) -> None:
 
     assert stored == 0
     assert repository.find_all() == []
+
+
+def test_pipeline_uses_query_mapper_for_search_urls(session) -> None:
+    """The pipeline uses QueryMapper to build search URLs for a category."""
+    fetcher = Mock()
+    fetcher.fetch.return_value = SAMPLE_HTML
+
+    config = make_config()
+    config.search_url = "https://example.com/search?q={keyword}"
+
+    repository = JobRepository(session)
+    stored = run_pipeline(
+        [config],
+        fetcher,
+        Parser(),
+        Normalizer(),
+        repository,
+        query_mapper=QueryMapper(),
+        category="it",
+    )
+
+    assert stored == 5  # 5 keywords for "it" category
+    assert fetcher.fetch.call_count == 5
+
+    # Verify the URLs used the mapped keywords
+    urls = [call.args[0] for call in fetcher.fetch.call_args_list]
+    assert "https://example.com/search?q=backend" in urls
+    assert "https://example.com/search?q=frontend" in urls
+    assert "https://example.com/search?q=fullstack" in urls
+    assert "https://example.com/search?q=software%20engineer" in urls
+    assert "https://example.com/search?q=devops" in urls

@@ -1,5 +1,6 @@
 name: topcv
 start_url: https://www.topcv.vn/tim-viec-lam-moi-nhat
+search_url: https://www.topcv.vn/tim-viec-lam-moi-nhat?keyword={keyword}
 selectors:
   job_listing: ".job-ta"
   title: "h3 a"

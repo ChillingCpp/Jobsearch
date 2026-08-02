@@ -27,6 +27,7 @@ class WebsiteConfig(BaseModel):
 
     name: str = Field(min_length=1)
     start_url: HttpUrl
+    search_url: HttpUrl | None = None
     selectors: dict[str, str] = Field(default_factory=dict)
     pagination: Pagination | None = None
     browser_actions: list[BrowserAction] = Field(default_factory=list)
