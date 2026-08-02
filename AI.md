@@ -26,7 +26,7 @@ Understand the project's long-term goal.
 
 Understand the architecture.
 
-3. Create
+3. Create or Recreate
 
 ./docs/execution.md
 After Understand project plan and vision

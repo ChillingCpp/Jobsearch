@@ -312,6 +312,11 @@ The architecture should allow
 
 without major changes to the core engine.
 
+# Adding New Features
+
+- read newfeature.md
+- only read the current features to add new feature to the project
+
 # Project Constraints
 
 The project is intended to remain a personal application.
